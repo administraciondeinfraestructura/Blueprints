@@ -1,5 +1,5 @@
 name: GCP - Red Hat 8
-version: 6.0
+version: 6.1
 formatVersion: 1
 inputs:
   nube:
