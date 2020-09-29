@@ -6,7 +6,7 @@ inputs:
     type: string
     title: Nube
     oneOf:
-      - title: On Premises
+      - title: On Premise
         const: 'nube:Z1'
       - title: GCP
         const: 'nube:Z2'
