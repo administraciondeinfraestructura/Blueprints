@@ -1,0 +1,48 @@
+formatVersion: 1
+inputs:
+  Workers:
+    title: Cantidad de Workers
+    type: integer
+    description: Cantidad de Workers
+    pattern: '[0-9]+'
+    default: 3
+    minimum: 1
+  Plan:
+    title: Plan
+    type: string
+    description: Plan
+    oneOf:
+      - title: Small
+        const: 'PLAN:SMALL'
+      - title: Medium
+        const: 'PLAN:MEDIUM'
+      - title: Large
+        const: 'PLAN:LARGE'
+    default: 'PLAN:SMALL'
+  environment:
+    type: string
+    title: Entorno
+    oneOf:
+      ##- title: Desarrollo
+      ##  const: 'env:D'
+      - title: Produccion
+        const: 'env:P'
+    default: 'env:P'
+resources:
+  #Cloud_SecurityGroup_1:
+  #  type: Cloud.SecurityGroup
+  #  dependsOn:
+  #    - Cloud_K8S_Cluster_1
+  #  properties:
+  #    constraints: []
+  #    securityGroupType: existing
+  Cloud_K8S_Cluster_1:
+    type: Cloud.K8S.Cluster
+    properties:
+      hostname: '${substring(input.environment,4) + "K8S-CL-" + env.deploymentName + ".cloud.osde.ar"}'
+      name: '${substring(input.environment,4) + "K8S-CL-" + env.deploymentName}'
+      port: 8443
+      workers: '${input.Workers}'
+      constraints:
+        - tag: '${input.Plan}'
+        - tag: '${input.environment}'
