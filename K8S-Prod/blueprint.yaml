@@ -1,15 +1,15 @@
-name: K8s - Produccion
+name: Kubernetes Cluster - Produccion
 version: 5.0
 formatVersion: 1
 inputs:
-  Workers:
+  workers:
     title: Cantidad de Workers
     type: integer
     description: Cantidad de Workers
     pattern: '[0-9]+'
     default: 3
     minimum: 1
-  Plan:
+  plan:
     title: Plan
     type: string
     description: Plan
@@ -44,7 +44,7 @@ resources:
       hostname: '${substring(input.environment,4) + "K8S-CL-" + env.deploymentName + ".cloud.osde.ar"}'
       name: '${substring(input.environment,4) + "K8S-CL-" + env.deploymentName}'
       port: 8443
-      workers: '${input.Workers}'
+      workers: '${input.workers}'
       constraints:
-        - tag: '${input.Plan}'
+        - tag: '${input.plan}'
         - tag: '${input.environment}'
