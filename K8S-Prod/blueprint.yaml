@@ -1,3 +1,5 @@
+name: K8s - Produccion
+version: 3.0
 formatVersion: 1
 inputs:
   Workers:
