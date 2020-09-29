@@ -1,12 +1,12 @@
 name: GCP - Debian 10
-version: 6.0
+version: 6.1
 formatVersion: 1
 inputs:
   nube:
     type: string
     title: Nube
     oneOf:
-      - title: On Premise
+      - title: On Premises
         const: 'nube:Z1'
       - title: GCP
         const: 'nube:Z2'
