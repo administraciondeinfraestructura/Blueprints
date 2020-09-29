@@ -1,0 +1,78 @@
+name: Namespace - Produccion
+version: 5.0
+formatVersion: 1
+inputs:
+  nspods:
+    title: Cantidad de pods
+    type: string
+    description: Cantidad de pods
+    pattern: '[0-9]+'
+    default: 1
+    minimum: 1
+    maximum: 5
+  nsname:
+    type: string
+    pattern: '[a-z0-9]'
+    title: Ingrese el nombre del namespace
+    description: Nombre del Namespace
+  nscpu:
+    type: string
+    title: CPU para el Namespace
+    description: CPU para el Namespace
+    oneOf:
+      - title: 1/4 CPU
+        const: '0.25'
+      - title: 1/2 CPU
+        const: '0.5'
+      - title: 1 CPU
+        const: '1'
+      - title: 2 CPU
+        const: '2'
+    default: '0.25'
+  nsmem:
+    type: string
+    title: Memoria para el Namespace
+    description: Memoria para el Namespace
+    oneOf:
+      - title: 128 Mb
+        const: 128Mi
+      - title: 256 Mb
+        const: 256Mi
+      - title: 512 Mb
+        const: 512Mi
+      - title: 1 Gb
+        const: '1'
+    default: 128Mi
+  environment:
+    type: string
+    title: Seleccione Entorno
+    description: Entorno para el namespace
+    oneOf:
+      ##  - title: Desarrollo
+      ##    const: 'k8s:D'
+      ##  - title: Testing
+      ##    const: 'k8s:T'        
+      ##  - title: Pre-Produccion
+      ##    const: 'k8s:PP'
+      - title: Produccion
+        const: 'k8s:P'
+    default: 'k8s:P'
+resources:
+  Cloud_K8S_Namespace_1:
+    type: Cloud.K8S.Namespace
+    properties:
+      name: '${input.nsname}'
+      description: Nombre del Namespace
+      limits:
+        - resource: pods
+          limit: '${input.nspods}'
+        - resource: limits.memory
+          limit: 2Gi
+        - resource: limits.cpu
+          limit: 2
+        - resource: requests.memory
+          limit: '${input.nsmem}'
+        - resource: requests.cpu
+          limit: '${input.nscpu}'
+      constraints:
+        - tag: '${input.environment}'
