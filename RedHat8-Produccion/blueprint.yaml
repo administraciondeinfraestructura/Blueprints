@@ -1,0 +1,116 @@
+name: Red Hat 8 - Produccion
+version: 3.0
+formatVersion: 1
+inputs:
+  nube:
+    type: string
+    title: Nube
+    oneOf:
+      - title: On Premise
+        const: 'nube:Z1'
+      - title: GCP
+        const: 'nube:Z2'
+    default: 'nube:Z1'
+  nodes:
+    title: Cantidad de equipos
+    type: integer
+    description: Cantidad de Equipos
+    pattern: '[0-9]+'
+    default: 1
+    minimum: 1
+    maximum: 5
+  imagen:
+    type: string
+    title: Sistema Operativo
+    enum:
+      - Red Hat 8 - Base
+      - Red Hat 8 - EAP7
+      - Red Hat 8 - EAP7 - Small
+    default: Red Hat 8 - Base
+  flavor:
+    title: Tamaño
+    type: string
+    oneOf:
+      - title: Extra Small (1 vCPU-1 GB)
+        const: Extra Small
+      - title: Small (1 vCPU-2 GB)
+        const: Small
+      - title: Medium (2 vCPU-2 GB)
+        const: Medium
+      - title: Large (2 vCPU-4 GB)
+        const: Large
+      - title: Extra Large (2 vCPU-8 GB)
+        const: Extra Large
+    default: Small
+  environment:
+    type: string
+    title: Entorno
+    oneOf:
+      #- title: Desarrollo
+      #  const: 'env:D'
+      #- title: Pre-Produccion
+      #  const: 'env:PP'
+      - title: Produccion
+        const: 'env:P'
+    #- title: Testing
+    #  const: 'env:T'
+    default: 'env:P'
+  network:
+    type: string
+    title: Red
+    oneOf:
+      - title: NO DMZ
+        const: 'RED:NODMZ'
+      - title: DMZ
+        const: 'RED:DMZ'
+    default: 'RED:NODMZ'
+  backup:
+    type: string
+    title: Politica de Backup
+    enum:
+      - Diario
+      - Semanal
+      - Quincenal
+      - Mensual
+      - Sin Backup
+    default: Sin Backup
+resources:
+  Cloud_Machine_1:
+    type: Cloud.Machine
+    properties:
+      name: '${substring(input.environment,4) + "LNX" + substring(input.nube,5)}'
+      image: '${input.imagen}'
+      flavor: '${input.flavor}'
+      customizationSpec: Linux
+      snapshotLimit: 1
+      count: '${input.nodes}'
+      constraints:
+        - tag: '${input.environment}'
+      networks:
+        - network: '${resource.Cloud_Network.id}'
+          tags:
+            - key: Entorno
+              value: '${substring(input.environment , 4)}'
+            - key: Proyecto
+              value: '${env.projectName}'
+            - key: Network
+              value: '${input.network}'
+      storage:
+        constraints:
+          - tag: '${input.environment}'
+      resourceGroupName: '${"VRA8-"+ (env.projectName)}'
+      tags:
+        - key: Backup
+          value: '${input.backup}'
+        - key: Entorno
+          value: '${substring(input.environment , 4)}'
+        - key: Proyecto
+          value: '${env.projectName}'
+  Cloud_Network:
+    type: Cloud.Network
+    properties:
+      networkType: existing
+      constraints:
+        - tag: '${input.network}'
+        - tag: '${input.environment}'
+        - tag: '${input.nube}'
