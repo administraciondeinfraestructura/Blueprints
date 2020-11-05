@@ -1,5 +1,5 @@
 name: Namespace - Produccion
-version: 5.0
+version: 5.1
 formatVersion: 1
 inputs:
   nspods:
@@ -64,15 +64,10 @@ resources:
       name: '${input.nsname}'
       description: Nombre del Namespace
       limits:
-        - resource: pods
-          limit: '${input.nspods}'
-        - resource: limits.memory
-          limit: 2Gi
-        - resource: limits.cpu
-          limit: 2
-        - resource: requests.memory
-          limit: '${input.nsmem}'
-        - resource: requests.cpu
-          limit: '${input.nscpu}'
+        pods: '${input.nspods}'
+        memory: '${input.nsmem}'
+        cpu: '${input.nscpu}'
+        limits.cpu: '${input.nscpu}'
+        limits.memory: '${input.nsmem}'
       constraints:
         - tag: '${input.environment}'
