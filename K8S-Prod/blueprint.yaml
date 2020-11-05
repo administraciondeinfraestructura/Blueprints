@@ -1,5 +1,5 @@
 name: Kubernetes Cluster - Produccion
-version: 5.5
+version: 5.6
 formatVersion: 1
 inputs:
   workers:
