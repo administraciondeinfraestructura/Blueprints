@@ -1,5 +1,5 @@
 name: GCP - Debian 10
-version: 6.2
+version: 6.3
 formatVersion: 1
 inputs:
   nube:
