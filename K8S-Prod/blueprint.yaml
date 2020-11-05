@@ -1,5 +1,5 @@
 name: Kubernetes Cluster - Produccion
-version: 5.4
+version: 5.5
 formatVersion: 1
 inputs:
   workers:
@@ -47,4 +47,3 @@ resources:
       workers: '${input.workers}'
       constraints:
         - tag: '${input.plan}'
-        - tag: '${input.environment}'
